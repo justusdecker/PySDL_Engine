@@ -13,7 +13,7 @@ I usually prefer to click one time on my `elgato stream deck` to run this.
 
 """
 from subprocess import run
-from os import getcwd, system
+from os import getcwd, system, remove
 from json import load, dumps
 print(getcwd())
 def json_read(filepath : str) -> dict | list:
@@ -59,6 +59,10 @@ def update_pinfo() -> str:
     msg = read_file('cm.i')
     
     cmtmsg = f"\"{data['major']}.{data['minor']}.{data['micro']}:{new} - {msg}\""
+    
+    remove('cm.i')
+    
+    json_write('../src/pinfo.json',data)
     
     run(f'git commit -m {cmtmsg}')
     run(f'git push')

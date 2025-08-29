@@ -1,5 +1,5 @@
 from subprocess import run
-from os import getcwd, system, remove
+from os import getcwd, system, remove, chdir
 from json import load, dumps
 print(getcwd())
 def json_read(filepath : str) -> dict | list:
@@ -30,7 +30,7 @@ def update_pinfo() -> str:
     1.0.4:abc123
     """
     #    chdir('..')
-    data = json_read('../src/pinfo.json')
+    data = json_read('src/pinfo.json')
 
     run('git add -A')
     
@@ -44,20 +44,22 @@ def update_pinfo() -> str:
     
     #print(changes,t_res)
     
-    msg = read_file('cm.i')
+    msg = read_file('tools/cm.i')
     
     data['hash'] = new
     
     cmtmsg = f"\"{data['major']}.{data['minor']}.{data['micro']}:{new} - {msg}\""
     
-    remove('cm.i')
+    remove('tools/cm.i')
     
-    json_write('../src/pinfo.json',data)
+    json_write('src/pinfo.json',data)
     run('git add -A')
     run(f'git commit -m {cmtmsg}')
     run(f'git push')
 if __name__ == '__main__':
+    chdir('tools/')
     system('get_current_commit_msg.vbs')
+    chdir('..')
     get_commit_hash()
     update_pinfo()
 

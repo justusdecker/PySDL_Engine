@@ -1,6 +1,8 @@
 all:
 	gcc -o main main.c -I src/include -L src/lib -lSDL3
 run:
-	./app.exe
+	./main.exe
 clean:
-	rm ./app.exe
+	rm ./main.exe
+ec:
+	python ./tools/easy_commit.py

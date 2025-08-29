@@ -1,0 +1,6 @@
+build:
+	gcc -Wall ./src/*.c -o app.exe
+run:
+	./app.exe
+clean:
+	rm ./app.exe

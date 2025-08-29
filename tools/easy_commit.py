@@ -56,7 +56,7 @@ def update_pinfo() -> str:
     
     data['micro'] += int(changes)
     
-    print(changes)
+    print(changes,t_res)
     
     msg = read_file('cm.i')
     

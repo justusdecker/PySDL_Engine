@@ -65,7 +65,7 @@ def update_pinfo() -> str:
     remove('cm.i')
     
     json_write('../src/pinfo.json',data)
-    
+    run('git add -A')
     run(f'git commit -m {cmtmsg}')
     run(f'git push')
 if __name__ == '__main__':

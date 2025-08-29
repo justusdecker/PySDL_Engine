@@ -1,17 +1,3 @@
-"""
-An easy to use commit tool
-
-This updates:
-    src/version.h
-    src/hash.h
-
-This needs to have two seperate files to show up correctly one my `elgato stream deck`
-
-Usage:
-
-I usually prefer to click one time on my `elgato stream deck` to run this.
-
-"""
 from subprocess import run
 from os import getcwd, system, remove
 from json import load, dumps

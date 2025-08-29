@@ -61,16 +61,15 @@ void update() {
 	if (time_to_wait > 0 && time_to_wait <= FRAME_TARGET_TIME) {
 		SDL_Delay(time_to_wait);
 	}
-	float delta_time = (ticks - last_frame_time) / 1000.0f;
+	delta_time = (ticks - last_frame_time) / 1000.0f;
 	
 	last_frame_time = ticks;
 }
 
-void move_ball(void) {
-
+void move_ball(int x, int y) {
 	// Move ball over the display
-	ball.x += 20 * delta_time;
-	ball.y += 2 * delta_time;
+	ball.x += x * delta_time;
+	ball.y += y * delta_time;
 
 }
 
@@ -103,27 +102,56 @@ int main() {
 	printf("Start App...");
 	setup();
 	initialize_window();
+	int moving_x = 0;
+	int moving_y = 0;
 	SDL_Event windowEvent;
 	while ( true ) {
 
 		update();
-		render();
 
-		const bool* keys = SDL_GetKeyboardState(NULL);
+		move_ball(moving_x * 100,moving_y * 100);
+	
+		render();
 
 		if ( SDL_PollEvent( &windowEvent ) ) {
 			if ( SDL_EVENT_QUIT == windowEvent.type ) {
 				break;
 			}
 			if ( SDL_EVENT_KEY_DOWN == windowEvent.type) {
-				printf("KP: %d",windowEvent.key.key);
-				if (keys[SDLK_W]) {
-					printf("HI");
-					move_ball();
+				
+				int key = (int)windowEvent.key.key;
+
+				if (key == SDLK_S) {
+					
+					moving_y = 1;
 				}
+				else if (key == SDLK_W) {
+					moving_y = -1;
+				}
+				if (key == SDLK_A) {
+					moving_x = -1;
+				}
+				else if (key == SDLK_D) {
+					moving_x = 1;
+				}	
+			}
+			if ( SDL_EVENT_KEY_UP == windowEvent.type) {
 				
-				
-				
+				int key = (int)windowEvent.key.key;
+
+				if (key == SDLK_S) {
+					
+					moving_y = 0;
+				}
+				else if (key == SDLK_W) {
+					moving_y = 0;
+				}
+				if (key == SDLK_A) {
+					moving_x = 0;
+				}
+				else if (key == SDLK_D) {
+					moving_x = 0;
+				}	
 			}
 			
 		}

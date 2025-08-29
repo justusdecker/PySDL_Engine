@@ -96,8 +96,6 @@ void destroy_window(void) {
 	SDL_Quit();
 }
 
-
-
 int main() {
 	printf("Start App...");
 	setup();

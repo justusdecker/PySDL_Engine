@@ -56,6 +56,8 @@ def update_pinfo() -> str:
     
     data['micro'] += int(changes)
     
+    print(changes)
+    
     msg = read_file('cm.i')
     
     cmtmsg = f"\"{data['major']}.{data['minor']}.{data['micro']}:{new} - {msg}\""

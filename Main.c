@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <SDL3/SDL.h>
+#include <SDL3/SDL_keyboard.h>
 #include "./src/constants.h"
 
 SDL_Window* window = NULL;
@@ -23,7 +24,7 @@ int initialize_window(void) {
 	// Define the parameters in the constants.h
 	
 	window = SDL_CreateWindow(
-			NULL, 
+			"PySDL", 
 			WINDOW_WIDTH,
 			WINDOW_HEIGHT,
 			SDL_WINDOW_HIGH_PIXEL_DENSITY
@@ -55,15 +56,18 @@ void update(void) {
 
 
 	// Waste some time until the next frame should be drawn!
-	while (SDL_GetTicks() < last_frame_time + FRAME_TARGET_TIME);
-
-	float delta_time = (SDL_GetTicks() - last_frame_time) / 1000.0f;
-
-
+	int ticks = SDL_GetTicks();
+	int time_to_wait = FRAME_TARGET_TIME - (ticks - last_frame_time);
+	if (time_to_wait > 0 && time_to_wait <= FRAME_TARGET_TIME) {
+		SDL_Delay(time_to_wait);
+	}
+	float delta_time = (ticks - last_frame_time) / 1000.0f;
+	
+	// Move ball over the display
 	ball.x += 20 * delta_time;
 	ball.y += 2 * delta_time;
 
-	last_frame_time = SDL_GetTicks();
+	last_frame_time = ticks;
 }
 
 void render(void) {
@@ -104,7 +108,13 @@ int main() {
 			if ( SDL_EVENT_QUIT == windowEvent.type ) {
 				break;
 			}
+			if ( SDL_EVENT_KEY_DOWN == windowEvent.type) {
+				printf("KbE: %d\n", windowEvent.key);
+			}
 		}
+		
+		
+		
 	}
 	destroy_window();
 	return 0;

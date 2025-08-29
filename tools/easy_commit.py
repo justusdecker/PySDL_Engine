@@ -38,11 +38,11 @@ def update_pinfo() -> str:
     
     t_res: list[str] = get_terminal_result(f'git diff --shortstat {old} {new}').split(',')
 
-    changes = sum([int(ch.split(' ')[1]) for ch in t_res])
+    #changes = sum([int(ch.split(' ')[1]) for ch in t_res])
     
-    data['micro'] += int(changes)
+    data['micro'] += 1
     
-    print(changes,t_res)
+    #print(changes,t_res)
     
     msg = read_file('cm.i')
     

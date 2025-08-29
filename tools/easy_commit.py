@@ -60,6 +60,8 @@ def update_pinfo() -> str:
     
     msg = read_file('cm.i')
     
+    data['hash'] = new
+    
     cmtmsg = f"\"{data['major']}.{data['minor']}.{data['micro']}:{new} - {msg}\""
     
     remove('cm.i')

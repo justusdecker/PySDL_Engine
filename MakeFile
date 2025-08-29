@@ -1,5 +1,5 @@
-build:
-	gcc -Wall ./src/*.c -o app.exe
+all:
+	gcc -o main main.c -I src/include -L src/lib -lSDL3
 run:
 	./app.exe
 clean:

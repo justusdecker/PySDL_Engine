@@ -1,2 +1,2 @@
-#define STATUS_OK 0;
-#define STATUS_ERROR 1;
+#define WINDOW_WIDTH 800
+#define WINDOW_HEIGHT 600

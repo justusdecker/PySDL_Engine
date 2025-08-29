@@ -42,5 +42,15 @@ int initialize_window(void) {
 int main() {
 	printf("Start App...");
 	initialize_window();
+	SDL_Event windowEvent;
+	while ( true ) {
+		if ( SDL_PollEvent( &windowEvent ) ) {
+			if ( SDL_EVENT_QUIT == windowEvent.type ) {
+				break;
+			}
+		}
+	}
+	SDL_DestroyWindow(window);
+	SDL_Quit();
 	return 0;
 }

@@ -50,7 +50,8 @@ void setup(void) {
 }
 
 void update(void) {
-
+	ball.x++;
+	ball.y++;
 }
 
 void render(void) {

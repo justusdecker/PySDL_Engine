@@ -57,10 +57,10 @@ void update(void) {
 	// Waste some time until the next frame should be drawn!
 	while (SDL_GetTicks() < last_frame_time + FRAME_TARGET_TIME);
 
-	int delta_time = last_frame_time - SDL_GetTicks();
+	int delta_time = (SDL_GetTicks() - last_frame_time) * 0.001;
 
 
-	ball.x += 2 * delta_time;
+	ball.x += 2000 * delta_time;
 	ball.y += 2 * delta_time;
 
 	last_frame_time = SDL_GetTicks();

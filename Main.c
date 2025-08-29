@@ -12,6 +12,8 @@ struct ball {
 	float h;
 } ball;
 
+int last_frame_time = 0;
+
 
 int initialize_window(void) {
 	
@@ -50,8 +52,18 @@ void setup(void) {
 }
 
 void update(void) {
-	ball.x++;
-	ball.y++;
+
+
+	// Waste some time until the next frame should be drawn!
+	while (SDL_GetTicks() < last_frame_time + FRAME_TARGET_TIME);
+
+	int delta_time = last_frame_time - SDL_GetTicks();
+
+
+	ball.x += 2 * delta_time;
+	ball.y += 2 * delta_time;
+
+	last_frame_time = SDL_GetTicks();
 }
 
 void render(void) {

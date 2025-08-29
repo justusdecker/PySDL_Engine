@@ -14,7 +14,7 @@ struct ball {
 } ball;
 
 int last_frame_time = 0;
-
+float delta_time;
 
 int initialize_window(void) {
 	
@@ -52,7 +52,7 @@ void setup(void) {
 	ball.h = 48;
 }
 
-void update(void) {
+void update() {
 
 
 	// Waste some time until the next frame should be drawn!
@@ -63,12 +63,17 @@ void update(void) {
 	}
 	float delta_time = (ticks - last_frame_time) / 1000.0f;
 	
+	last_frame_time = ticks;
+}
+
+void move_ball(void) {
+
 	// Move ball over the display
 	ball.x += 20 * delta_time;
 	ball.y += 2 * delta_time;
 
-	last_frame_time = ticks;
 }
+
 
 void render(void) {
 	SDL_SetRenderDrawColor(renderer, 24,24,24,255);
@@ -104,13 +109,23 @@ int main() {
 		update();
 		render();
 
+		const bool* keys = SDL_GetKeyboardState(NULL);
+
 		if ( SDL_PollEvent( &windowEvent ) ) {
 			if ( SDL_EVENT_QUIT == windowEvent.type ) {
 				break;
 			}
 			if ( SDL_EVENT_KEY_DOWN == windowEvent.type) {
-				printf("KbE: %d\n", windowEvent.key);
+				printf("KP: %d",windowEvent.key.key);
+				if (keys[SDLK_W]) {
+					printf("HI");
+					move_ball();
+				}
+				
+				
+				
 			}
+			
 		}
 		
 		

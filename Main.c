@@ -2,16 +2,11 @@
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_keyboard.h>
 #include "./src/constants.h"
+#include "./src/entity.h"
+
 
 SDL_Window* window = NULL;
 SDL_Renderer* renderer = NULL; 
-
-struct Entity {
-	float x;
-	float y;
-	float w;
-	float h;
-};
 
 struct PlayerMovement {
 	char w;
@@ -72,26 +67,11 @@ void setup(void) {
 }
 
 
-// Prevents object a from leaving object b x,y,w,h
-// In other words it keep it in bounds
-// This is not an overlapping check!
-void keepInside(struct Entity* a, struct Entity* b) {
-	if (a->x < b->x) a->x = b->x;
-	if (a->y < b->y) a->y = b->y;
-	if (a->x + a->w > b->w) a->x = b->w - a->w;
-	if (a->y + a->h > b->h) a->y = b->h - a->h;
-}
-
-bool collision(struct Entity* a, struct Entity* b) {
-	return a->x > b->x && a->y > b->y && a->x + a->w < b->w && a->y + a->h < b->h;
-}
-
-
 void move_ball(int x, int y) {
 	// Move ball over the display
 	Ball.x += x * delta_time;
 	Ball.y += y * delta_time;
-	keepInside(&Ball,&Canvas);
+	ENTITY_KeepInside(&Ball,&Canvas);
 }
 
 void update() {

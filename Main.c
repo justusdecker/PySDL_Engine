@@ -70,9 +70,11 @@ void move_ball(int x, int y) {
 	// Move ball over the display
 	ball.x += x * delta_time;
 	ball.y += y * delta_time;
-
+	if (ball.x < 0) ball.x = 0;
+	if (ball.y < 0) ball.y = 0;
+	if (ball.x + ball.w > WINDOW_WIDTH) ball.x = WINDOW_WIDTH - ball.w;
+	if (ball.y + ball.h > WINDOW_HEIGHT) ball.y = WINDOW_HEIGHT - ball.h;
 }
-
 
 void render(void) {
 	SDL_SetRenderDrawColor(renderer, 24,24,24,255);

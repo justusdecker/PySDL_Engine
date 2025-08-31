@@ -6,15 +6,24 @@
 SDL_Window* window = NULL;
 SDL_Renderer* renderer = NULL; 
 
-struct ball {
+struct Entity {
 	float x;
 	float y;
 	float w;
 	float h;
-} ball;
+};
+
+struct PlayerMovement {
+	int moving_x;
+	int moving_y;
+} PMove;
 
 int last_frame_time = 0;
 float delta_time;
+bool is_running = true;
+
+struct Entity Ball;
+struct Entity Canvas;
 
 int initialize_window(void) {
 	
@@ -46,10 +55,31 @@ int initialize_window(void) {
 }
 
 void setup(void) {
-	ball.x = 16;
-	ball.y = 16;
-	ball.w = 32;
-	ball.h = 48;
+	Ball.x = 16;
+	Ball.y = 16;
+	Ball.w = 32;
+	Ball.h = 48;
+	Canvas.x = 0;
+	Canvas.y = 0;
+	Canvas.w = (float)WINDOW_WIDTH;
+	Canvas.h = (float)WINDOW_HEIGHT;
+}
+
+
+// Prevents object a from colliding with object b
+// This is not an overlapping check!
+bool collide(struct Entity* a, struct Entity* b) {
+	if (a->x < b->x) a->x = b->x;
+	if (a->y < b->x) a->y = b->x;
+	if (a->x + a->w > b->w) a->x = b->w - a->w;
+	if (a->y + a->h > b->h) a->y = b->h - a->h;
+}
+
+void move_ball(int x, int y) {
+	// Move ball over the display
+	Ball.x += x * delta_time;
+	Ball.y += y * delta_time;
+	collide(&Ball,&Canvas);
 }
 
 void update() {
@@ -64,16 +94,9 @@ void update() {
 	delta_time = (ticks - last_frame_time) / 1000.0f;
 	
 	last_frame_time = ticks;
-}
 
-void move_ball(int x, int y) {
-	// Move ball over the display
-	ball.x += x * delta_time;
-	ball.y += y * delta_time;
-	if (ball.x < 0) ball.x = 0;
-	if (ball.y < 0) ball.y = 0;
-	if (ball.x + ball.w > WINDOW_WIDTH) ball.x = WINDOW_WIDTH - ball.w;
-	if (ball.y + ball.h > WINDOW_HEIGHT) ball.y = WINDOW_HEIGHT - ball.h;
+	move_ball(PMove.moving_x * 100,PMove.moving_y * 100);
+
 }
 
 void render(void) {
@@ -84,7 +107,7 @@ void render(void) {
 	
 	// Drawing Rectangle
 	SDL_SetRenderDrawColor(renderer, 48,48,48,255);
-	SDL_FRect ball_rect = { ball.x,ball.y,ball.w,ball.h };
+	SDL_FRect ball_rect = { Ball.x,Ball.y,Ball.w,Ball.h };
 	SDL_RenderFillRect(renderer, &ball_rect);
 
 	// Drawing objects
@@ -98,66 +121,44 @@ void destroy_window(void) {
 	SDL_Quit();
 }
 
-int main() {
-	printf("Start App...");
-	setup();
-	initialize_window();
-	int moving_x = 0;
-	int moving_y = 0;
+void check_events(void) {
 	SDL_Event windowEvent;
-	while ( true ) {
+	if ( SDL_PollEvent( &windowEvent ) ) {
+		if ( SDL_EVENT_QUIT == windowEvent.type ) {
+			is_running = false;
+		}
+		if ( SDL_EVENT_KEY_DOWN == windowEvent.type) {
+			int key = (int)windowEvent.key.key;
+			if (key == SDLK_S) PMove.moving_y = 1;
+			else if (key == SDLK_W) PMove.moving_y = -1;
+			if (key == SDLK_A) PMove.moving_x = -1;
+			else if (key == SDLK_D) PMove.moving_x = 1;
+		}
+		if ( SDL_EVENT_KEY_UP == windowEvent.type) {
+			int key = (int)windowEvent.key.key;
+			if (key == SDLK_S || key == SDLK_W) PMove.moving_y = 0;
+			if (key == SDLK_A || key == SDLK_D) PMove.moving_x = 0;
 
-		update();
-
-		move_ball(moving_x * 100,moving_y * 100);
-	
-		render();
-
-		if ( SDL_PollEvent( &windowEvent ) ) {
-			if ( SDL_EVENT_QUIT == windowEvent.type ) {
-				break;
-			}
-			if ( SDL_EVENT_KEY_DOWN == windowEvent.type) {
-				
-				int key = (int)windowEvent.key.key;
-
-				if (key == SDLK_S) {
-					
-					moving_y = 1;
-				}
-				else if (key == SDLK_W) {
-					moving_y = -1;
-				}
-				if (key == SDLK_A) {
-					moving_x = -1;
-				}
-				else if (key == SDLK_D) {
-					moving_x = 1;
-				}	
-			}
-			if ( SDL_EVENT_KEY_UP == windowEvent.type) {
-				
-				int key = (int)windowEvent.key.key;
-
-				if (key == SDLK_S) {
-					
-					moving_y = 0;
-				}
-				else if (key == SDLK_W) {
-					moving_y = 0;
-				}
-				if (key == SDLK_A) {
-					moving_x = 0;
-				}
-				else if (key == SDLK_D) {
-					moving_x = 0;
-				}	
-			}
-			
 		}
 		
+	}
 		
-		
+}
+
+
+
+int main() {
+	
+	printf("Start App...");
+	PMove.moving_x = 0;
+	PMove.moving_y = 0;
+	setup();
+	initialize_window();
+	
+	while ( is_running ) {
+		update();
+		render();
+		check_events();
 	}
 	destroy_window();
 	return 0;

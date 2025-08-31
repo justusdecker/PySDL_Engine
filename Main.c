@@ -14,8 +14,10 @@ struct Entity {
 };
 
 struct PlayerMovement {
-	int moving_x;
-	int moving_y;
+	char w;
+	char s;
+	char a;
+	char d;
 } PMove;
 
 int last_frame_time = 0;
@@ -63,23 +65,33 @@ void setup(void) {
 	Canvas.y = 0;
 	Canvas.w = (float)WINDOW_WIDTH;
 	Canvas.h = (float)WINDOW_HEIGHT;
+	PMove.w = 0;
+	PMove.a = 0;
+	PMove.s = 0;
+	PMove.d = 0;
 }
 
 
-// Prevents object a from colliding with object b
+// Prevents object a from leaving object b x,y,w,h
+// In other words it keep it in bounds
 // This is not an overlapping check!
-bool collide(struct Entity* a, struct Entity* b) {
+void keepInside(struct Entity* a, struct Entity* b) {
 	if (a->x < b->x) a->x = b->x;
-	if (a->y < b->x) a->y = b->x;
+	if (a->y < b->y) a->y = b->y;
 	if (a->x + a->w > b->w) a->x = b->w - a->w;
 	if (a->y + a->h > b->h) a->y = b->h - a->h;
 }
+
+bool collision(struct Entity* a, struct Entity* b) {
+	return a->x > b->x && a->y > b->y && a->x + a->w < b->w && a->y + a->h < b->h;
+}
+
 
 void move_ball(int x, int y) {
 	// Move ball over the display
 	Ball.x += x * delta_time;
 	Ball.y += y * delta_time;
-	collide(&Ball,&Canvas);
+	keepInside(&Ball,&Canvas);
 }
 
 void update() {
@@ -95,7 +107,7 @@ void update() {
 	
 	last_frame_time = ticks;
 
-	move_ball(PMove.moving_x * 100,PMove.moving_y * 100);
+	move_ball((PMove.a + PMove.d) * 100,(PMove.w + PMove.s) * 100);
 
 }
 
@@ -129,15 +141,18 @@ void check_events(void) {
 		}
 		if ( SDL_EVENT_KEY_DOWN == windowEvent.type) {
 			int key = (int)windowEvent.key.key;
-			if (key == SDLK_S) PMove.moving_y = 1;
-			else if (key == SDLK_W) PMove.moving_y = -1;
-			if (key == SDLK_A) PMove.moving_x = -1;
-			else if (key == SDLK_D) PMove.moving_x = 1;
+			if (key == SDLK_S) PMove.s = 1;
+			if (key == SDLK_W) PMove.w = -1;
+			if (key == SDLK_A) PMove.a = -1;
+			if (key == SDLK_D) PMove.d = 1;
 		}
 		if ( SDL_EVENT_KEY_UP == windowEvent.type) {
 			int key = (int)windowEvent.key.key;
-			if (key == SDLK_S || key == SDLK_W) PMove.moving_y = 0;
-			if (key == SDLK_A || key == SDLK_D) PMove.moving_x = 0;
+
+			if (key == SDLK_S) PMove.s = 0;
+			if (key == SDLK_W) PMove.w = 0;
+			if (key == SDLK_A) PMove.a = 0;
+			if (key == SDLK_D) PMove.d = 0;
 
 		}
 		
@@ -150,8 +165,6 @@ void check_events(void) {
 int main() {
 	
 	printf("Start App...");
-	PMove.moving_x = 0;
-	PMove.moving_y = 0;
 	setup();
 	initialize_window();
 	
@@ -159,6 +172,7 @@ int main() {
 		update();
 		render();
 		check_events();
+		//printf("c:%d\n",collision(&Ball,&Canvas));
 	}
 	destroy_window();
 	return 0;

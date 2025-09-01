@@ -25,6 +25,8 @@ struct Entity Canvas;
 struct LCOLORS LOG_COLORS = {34,32,33,31,0};
 struct LTYPES LOG_TYPES = {"DEB", "INF", "WAR", "ERR"};
 
+SDL_Texture *player_texture = NULL;
+
 int initialize_window(void) {
 	
 	if (!SDL_Init(SDL_INIT_VIDEO)) {
@@ -61,7 +63,7 @@ void setup(void) {
 	Ball.x = 16;
 	Ball.y = 16;
 	Ball.w = 32;
-	Ball.h = 48;
+	Ball.h = 32;
 	Canvas.x = 0;
 	Canvas.y = 0;
 	Canvas.w = (float)WINDOW_WIDTH;
@@ -103,10 +105,11 @@ void render(void) {
 	
 	
 	// Drawing Rectangle
-	SDL_SetRenderDrawColor(renderer, 48,48,48,255);
+	//SDL_SetRenderDrawColor(renderer, 48,48,48,255);
 	SDL_FRect ball_rect = { Ball.x,Ball.y,Ball.w,Ball.h };
-	SDL_RenderFillRect(renderer, &ball_rect);
+	//SDL_RenderFillRect(renderer, &ball_rect);
 
+	SDL_RenderTexture(renderer, player_texture, NULL, &ball_rect);
 	// Drawing objects
 	SDL_RenderPresent(renderer);
 	
@@ -149,7 +152,7 @@ int main() {
 	LOG_WRITE("Start App...",LOG_COLORS.INFO,LOG_TYPES.INFO);
 	setup();
 	initialize_window();
-	
+	player_texture = ENTITY_LoadBitmap(renderer, "data\\img\\figure.bmp");
 	while ( is_running ) {
 		update();
 		render();

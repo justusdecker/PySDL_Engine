@@ -3,7 +3,7 @@
 #include <SDL3/SDL_keyboard.h>
 #include "./src/constants.h"
 #include "./src/entity.h"
-
+#include "./src/log.h"
 
 SDL_Window* window = NULL;
 SDL_Renderer* renderer = NULL; 
@@ -22,9 +22,15 @@ bool is_running = true;
 struct Entity Ball;
 struct Entity Canvas;
 
+struct LCOLORS LOG_COLORS = {34,32,33,31,0};
+struct LTYPES LOG_TYPES = {"DEB", "INF", "WAR", "ERR"};
+
 int initialize_window(void) {
 	
-	SDL_Init(SDL_INIT_VIDEO);
+	if (!SDL_Init(SDL_INIT_VIDEO)) {
+		LOG_WRITE("Error initializing SDL Video",LOG_COLORS.ERROR,LOG_TYPES.ERROR);
+		return 0;
+	}
 	
 	// Creating the SDL Window
 	// Define the parameters in the constants.h
@@ -37,17 +43,17 @@ int initialize_window(void) {
 			);
 		
 	if (window == NULL) {
-		fprintf(stderr, "Error creating SDL Window.\n");
+		LOG_WRITE("Error creating SDL Window",LOG_COLORS.ERROR,LOG_TYPES.ERROR);
 		return 0;
 	}
 
 	renderer = SDL_CreateRenderer(window, NULL);
 
 	if (!renderer) {
-		fprintf(stderr, "Error creating SDL Renderer.\n");
+		LOG_WRITE("Error creating SDL Renderer",LOG_COLORS.ERROR,LOG_TYPES.ERROR);
 		return 0;
 	}
-
+	LOG_WRITE("Initialized SDL successfully",LOG_COLORS.INFO,LOG_TYPES.INFO);
 	return 1;
 }
 
@@ -65,7 +71,6 @@ void setup(void) {
 	PMove.s = 0;
 	PMove.d = 0;
 }
-
 
 void move_ball(int x, int y) {
 	// Move ball over the display
@@ -140,11 +145,8 @@ void check_events(void) {
 		
 }
 
-
-
 int main() {
-	
-	printf("Start App...");
+	LOG_WRITE("Start App...",LOG_COLORS.INFO,LOG_TYPES.INFO);
 	setup();
 	initialize_window();
 	

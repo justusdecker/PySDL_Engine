@@ -8,8 +8,16 @@ struct Entity {
 	
 };
 
-void ENTITY_LoadBitmap(char* filepath) {
+SDL_Texture ENTITY_LoadBitmap(SDL_Renderer *renderer, char* filepath) {
 	SDL_asprintf(&filepath, "%s",SDL_GetBasePath());
+	SDL_Surface surface = SDL_LoadBMP(filepath);
+	if (!surface) {
+
+	}
+	SDL_Texture texture = SDL_CreateTextureFromSurface(renderer, surface);
+	SDL_DestroySurface(surface);
+	
+	return texture;
 }
 
 void ENTITY_KeepInside(struct Entity* a, struct Entity* b) {

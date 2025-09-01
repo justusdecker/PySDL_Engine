@@ -10,3 +10,5 @@ struct Entity {
 void ENTITY_KeepInside(struct Entity* a, struct Entity* b);
 
 bool ENTITY_GetCollision(struct Entity* a, struct Entity* b);
+
+SDL_Texture* ENTITY_LoadBitmap(SDL_Renderer *renderer, char* filepath);

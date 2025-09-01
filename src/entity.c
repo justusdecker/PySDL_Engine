@@ -1,4 +1,5 @@
 #include <SDL3/SDL.h>
+#include <stdio.h>
 struct Entity {
 	float x;
 	float y;
@@ -8,8 +9,20 @@ struct Entity {
 	
 };
 
-void ENTITY_LoadBitmap(char* filepath) {
-	SDL_asprintf(&filepath, "%s",SDL_GetBasePath());
+SDL_Texture* ENTITY_LoadBitmap(SDL_Renderer *renderer, char* filepath) {
+	char* fp;
+	SDL_asprintf(&fp, "%s%s",SDL_GetBasePath(),filepath);
+	SDL_Surface *surface = SDL_LoadBMP(fp);
+	if (!surface) {
+		printf("Cannot load surface\n%s",fp);
+	}
+	SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
+	if (!texture) {
+		printf("Cannot create texture\n");
+	}
+	SDL_DestroySurface(surface);
+	
+	return texture;
 }
 
 void ENTITY_KeepInside(struct Entity* a, struct Entity* b) {

@@ -1,8 +1,18 @@
+
 all:
-	gcc -o main main.c src/info.c src/entity.c src/log.c -I src/include -L src/lib -lSDL3
+	gcc -Wall -Werror -c ./src/wsdl.c -I src/include -L src/lib -lSDL3 -o ./bin/wsdl.o
+	gcc -Wall -Werror -shared -o ./bin/wsdl.dll ./bin/wsdl.o -L src/lib -lSDL3
+	python ./tools/zipit.py ./test.zip ./bin/wsdl.dll ./bin/wsdl.o
 run:
 	./main.exe
 clean:
-	rm ./main.exe
-ec:
+	rm ./bin/wsdl.dll
+	rm ./bin/wsdl.o
+push:
+	WScript.exe ./tools/get_current_commit_msg.vbs
+	set /p cmt_msg = < ./tools/cm.i
+	echo %cmd_msg%
 	python ./tools/easy_commit.py
+
+	
+	

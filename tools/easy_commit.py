@@ -1,5 +1,5 @@
 from subprocess import run
-from os import getcwd, system, remove, chdir
+from os import getcwd, remove
 from json import load, dumps
 print(getcwd())
 def json_read(filepath : str) -> dict | list:
@@ -22,44 +22,44 @@ def get_commit_hash(idm : int = 1) -> str:
     return get_terminal_result(f"git log --pretty=format:'%h' -n {idm}").replace("\'",'')
 
 def update_pinfo() -> str:
-    """
-    The new version format will be:
-    {MAJOR}.{MINOR}.{MICRO}:{COMMIT_HASH}
+    """Updates the project's version information and commits changes.
 
-    combined:
-    1.0.4:abc123
+    This function automates the versioning process for a project. It increments
+    the `micro` version number in the `src/pinfo.json` file, stages all pending
+    changes, and then performs a Git commit. The new version string is
+    formatted as `{MAJOR}.{MINOR}.{MICRO}:{COMMIT_HASH}`.
+
+    The commit message is read from the `tools/cm.i` file, and this file is
+    deleted after its content is used. The updated version data is committed
+    along with all other staged changes. Finally, the function pushes the
+    new commit to the remote repository.
+
+    The function assumes the following file structure and dependencies:
+    - A `src/pinfo.json` file containing the version information.
+    - A `tools/cm.i` file that contains the commit message.
+    - The Git command-line tool is installed and configured.
+
+    Raises:
+        FileNotFoundError: If 'src/pinfo.json' or 'tools/cm.i' cannot be found.
     """
     #    chdir('..')
     data = json_read('src/pinfo.json')
 
     run('git add -A')
     
-    old, new = get_commit_hash(2).split("\n")[1], get_commit_hash()
-    
-    t_res: list[str] = get_terminal_result(f'git diff --shortstat {old} {new}').split(',')
-
-    #changes = sum([int(ch.split(' ')[1]) for ch in t_res])
-    
     data['micro'] += 1
-    
-    #print(changes,t_res)
     
     msg = read_file('tools/cm.i')
     
-    data['hash'] = new
+    data['hash'] = get_commit_hash()
     
-    cmtmsg = f"\"{data['major']}.{data['minor']}.{data['micro']}:{new} - {msg}\""
-    
-    remove('tools/cm.i')
+    cmtmsg = f"\"{data['major']}.{data['minor']}.{data['micro']}:{data['hash']} - {msg}\""
     
     json_write('src/pinfo.json',data)
     run('git add -A')
     run(f'git commit -m {cmtmsg}')
     run(f'git push')
 if __name__ == '__main__':
-    chdir('tools/')
-    system('get_current_commit_msg.vbs')
-    chdir('..')
     get_commit_hash()
     update_pinfo()
 

@@ -1,9 +1,11 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_keyboard.h>
 #include "./src/constants.h"
-#include "./src/entity.h"
 #include "./src/log.h"
+#include "./src/entity.h"
+
 
 SDL_Window* window = NULL;
 SDL_Renderer* renderer = NULL; 
@@ -22,15 +24,12 @@ bool is_running = true;
 struct Entity Ball;
 struct Entity Canvas;
 
-struct LCOLORS LOG_COLORS = {34,32,33,31,0};
-struct LTYPES LOG_TYPES = {"DEB", "INF", "WAR", "ERR"};
-
 SDL_Texture *player_texture = NULL;
 
 int initialize_window(void) {
 	
 	if (!SDL_Init(SDL_INIT_VIDEO)) {
-		LOG_WRITE("Error initializing SDL Video",LOG_COLORS.ERROR,LOG_TYPES.ERROR);
+		LOG_WRITE("Error initializing SDL Video",LOG_ERROR,LOG_TYPES.ERROR);
 		return 0;
 	}
 	
@@ -45,17 +44,17 @@ int initialize_window(void) {
 			);
 		
 	if (window == NULL) {
-		LOG_WRITE("Error creating SDL Window",LOG_COLORS.ERROR,LOG_TYPES.ERROR);
+		LOG_WRITE("Error creating SDL Window",LOG_ERROR,LOG_TYPES.ERROR);
 		return 0;
 	}
 
 	renderer = SDL_CreateRenderer(window, NULL);
 
 	if (!renderer) {
-		LOG_WRITE("Error creating SDL Renderer",LOG_COLORS.ERROR,LOG_TYPES.ERROR);
+		LOG_WRITE("Error creating SDL Renderer",LOG_ERROR,LOG_TYPES.ERROR);
 		return 0;
 	}
-	LOG_WRITE("Initialized SDL successfully",LOG_COLORS.INFO,LOG_TYPES.INFO);
+	LOG_WRITE("Initialized SDL successfully",LOG_INFO,LOG_TYPES.INFO);
 	return 1;
 }
 
@@ -149,7 +148,7 @@ void check_events(void) {
 }
 
 int main() {
-	LOG_WRITE("Start App...",LOG_COLORS.INFO,LOG_TYPES.INFO);
+	LOG_WRITE("Start App...",LOG_INFO,LOG_TYPES.INFO);
 	setup();
 	initialize_window();
 	player_texture = ENTITY_LoadBitmap(renderer, "data\\img\\figure.bmp");

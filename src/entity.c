@@ -1,4 +1,5 @@
 #include <SDL3/SDL.h>
+#include <stdlib.h>
 #include <stdio.h>
 struct Entity {
 	float x;

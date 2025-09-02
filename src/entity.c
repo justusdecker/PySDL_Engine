@@ -20,8 +20,10 @@ SDL_Texture* ENTITY_LoadBitmap(SDL_Renderer *renderer, char* filepath) {
 	SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
 	if (!texture) {
 		printf("Cannot create texture\n");
+		SDL_free(fp);
 	}
 	SDL_DestroySurface(surface);
+	
 	
 	return texture;
 }

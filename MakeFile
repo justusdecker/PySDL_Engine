@@ -1,5 +1,5 @@
 all:
-	gcc -o main main.c src/entity.c src/log.c -I src/include -L src/lib -lSDL3
+	gcc -o main main.c src/info.c src/entity.c src/log.c -I src/include -L src/lib -lSDL3
 run:
 	./main.exe
 clean:

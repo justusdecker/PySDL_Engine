@@ -5,6 +5,7 @@
 #include "./src/constants.h"
 #include "./src/log.h"
 #include "./src/entity.h"
+#include "./src/info.h"
 
 
 SDL_Window* window = NULL;
@@ -23,6 +24,7 @@ bool is_running = true;
 
 struct Entity Ball;
 struct Entity Canvas;
+char memory_info_puffer[24];
 
 SDL_Texture *player_texture = NULL;
 
@@ -109,12 +111,22 @@ void render(void) {
 	//SDL_RenderFillRect(renderer, &ball_rect);
 
 	SDL_RenderTexture(renderer, player_texture, NULL, &ball_rect);
+	
+	snprintf(memory_info_puffer, sizeof(memory_info_puffer), "%d KB", func());
+	SDL_SetRenderDrawColor(renderer, 255,255,255,255);
+	SDL_SetRenderScale(renderer, 4.0f,4.0f);
+	SDL_RenderDebugText(renderer, 0,0,memory_info_puffer);
+	SDL_SetRenderScale(renderer, 1.0f,1.0f);
 	// Drawing objects
 	SDL_RenderPresent(renderer);
 	
 }
 
 void destroy_window(void) {
+	if (player_texture != NULL) {
+        SDL_DestroyTexture(player_texture);
+        player_texture = NULL;
+    }
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);
 	SDL_Quit();
@@ -152,10 +164,12 @@ int main() {
 	setup();
 	initialize_window();
 	player_texture = ENTITY_LoadBitmap(renderer, "data\\img\\figure.bmp");
+	
 	while ( is_running ) {
 		update();
 		render();
 		check_events();
+		func();
 		//printf("c:%d\n",collision(&Ball,&Canvas));
 	}
 	destroy_window();

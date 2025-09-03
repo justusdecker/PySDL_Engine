@@ -7,6 +7,7 @@ SDL_Renderer* renderer = NULL;
 float WSDL_delta_time;
 bool WSDL_is_running = true;
 int WSDL_last_frame_time = 0;
+char memory_info_puffer[24];
 
 char WSDL_InitializeWindow(
 	char* window_title,
@@ -66,4 +67,18 @@ void WSDL_CheckEvents(void) {
 		
 	}
 		
+}
+
+void WSDL_RenderDebug(void) {
+	SDL_SetRenderDrawColor(renderer, 24,24,24,255);
+	SDL_RenderClear(renderer);
+	
+	snprintf(memory_info_puffer, sizeof(memory_info_puffer), "%d KB", func());
+	SDL_SetRenderDrawColor(renderer, 255,255,255,255);
+	SDL_SetRenderScale(renderer, 4.0f,4.0f);
+	SDL_RenderDebugText(renderer, 0,0,memory_info_puffer);
+	SDL_SetRenderScale(renderer, 1.0f,1.0f);
+	// Drawing objects
+	SDL_RenderPresent(renderer);
+	
 }

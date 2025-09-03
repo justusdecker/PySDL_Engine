@@ -9,7 +9,8 @@ clean:
 	rm ./bin/wsdl.dll
 	rm ./bin/wsdl.o
 push:
+	WScript.exe ./tools/get_current_commit_msg.vbs
 	call ./tools/action_push.bat
-	shell rm ./tools/cm.i
-	shell rm ./tools/cmtmsg.i
-	shell rm ./tools/hash.i
+	rm ./tools/cm.i
+	rm ./tools/cmtmsg.i
+	rm ./tools/hash.i

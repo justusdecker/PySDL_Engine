@@ -1,5 +1,4 @@
-git add -A
-start ./tools/get_current_commit_msg.vbs
+git add -A :!./tools/cm.i
 git log --pretty=format:%%h -n 1 > ./tools/hash.i
 python ./tools/easy_commit.py
 set /p ver=<./tools/cmtmsg.i

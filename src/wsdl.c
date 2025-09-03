@@ -1,6 +1,19 @@
 #include <SDL3/SDL.h>
 #include <stdio.h>
 #include "./constants.h"
+#include <windows.h>
+#include <psapi.h>
+#include <stdio.h>
+PROCESS_MEMORY_COUNTERS_EX pmc;
+
+unsigned int WSDL_GetRamUsage(void) {
+    if (GetProcessMemoryInfo(GetCurrentProcess(), (PROCESS_MEMORY_COUNTERS* ) &pmc, sizeof(pmc))) {
+        return (unsigned int)pmc.WorkingSetSize / 1024;
+    }
+    return 0;
+}
+
+
 SDL_Window* window = NULL;
 SDL_Renderer* renderer = NULL; 
 
@@ -73,7 +86,7 @@ void WSDL_RenderDebug(void) {
 	SDL_SetRenderDrawColor(renderer, 24,24,24,255);
 	SDL_RenderClear(renderer);
 	
-	snprintf(memory_info_puffer, sizeof(memory_info_puffer), "%d KB", func());
+	snprintf(memory_info_puffer, sizeof(memory_info_puffer), "%d KB", WSDL_GetRamUsage());
 	SDL_SetRenderDrawColor(renderer, 255,255,255,255);
 	SDL_SetRenderScale(renderer, 4.0f,4.0f);
 	SDL_RenderDebugText(renderer, 0,0,memory_info_puffer);

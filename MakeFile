@@ -10,6 +10,6 @@ clean:
 	rm ./bin/wsdl.o
 push:
 	call ./tools/action_push.bat
-	rm ./tools/cm.i
-	rm ./tools/cmtmsg.i
-	rm ./tools/hash.i
+	shell rm ./tools/cm.i
+	shell rm ./tools/cmtmsg.i
+	shell rm ./tools/hash.i

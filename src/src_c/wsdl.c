@@ -3,7 +3,6 @@
 #include "./constants.h"
 #include <windows.h>
 #include <psapi.h>
-#include <stdio.h>
 PROCESS_MEMORY_COUNTERS_EX pmc;
 
 unsigned int WSDL_GetRamUsage(void) {

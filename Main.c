@@ -2,10 +2,7 @@
 #include <stdlib.h>
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_keyboard.h>
-#include "./src/constants.h"
-#include "./src/log.h"
 #include "./src/entity.h"
-#include "./src/info.h"
 
 
 SDL_Window* window = NULL;

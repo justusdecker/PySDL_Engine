@@ -9,10 +9,7 @@ clean:
 	rm ./bin/wsdl.dll
 	rm ./bin/wsdl.o
 push:
-	WScript.exe ./tools/get_current_commit_msg.vbs
-	set /p cmt_msg = < ./tools/cm.i
-	echo %cmd_msg%
-	python ./tools/easy_commit.py
-
-	
-	
+	call ./tools/action_push.bat
+	rm ./tools/cm.i
+	rm ./tools/cmtmsg.i
+	rm ./tools/hash.i

@@ -1,5 +1,5 @@
 from json import load, dumps
-import sys
+from subprocess import Popen
 PINFO = 'src/pinfo.json'
 
 type _data = str | dict | list | None
@@ -22,4 +22,5 @@ def update_pinfo() -> str:
     f_handler('./tools/cmtmsg.i','w',f"{data['major']}.{data['minor']}.{data['micro']}")
     f_handler(PINFO,'wj',data)
 if __name__ == '__main__':
+    Popen('./tools/get_current_commit_msg.vbs')
     update_pinfo()
